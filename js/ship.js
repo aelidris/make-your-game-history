@@ -1,5 +1,5 @@
 import { boxBCR, gameDiv, gameOver, gamePaused, keys } from "./index.js";
-import { gameRunning,gameLost } from "./index.js";
+import { gameRunning,gameLost,showStoryEvent } from "./index.js";
 import { enemyDestroyed,scoreMultiplier,windowFocused } from "./enemy.js";
 
 export const scoreDiv = document.querySelector(".score")
@@ -103,16 +103,35 @@ export function isBulletHitPlayer(bulletBCR) {
 }
 
 export function addScore(id) {
-      if (id < 8) {
+    if (id < 8) {
         score += 30 * scoreMultiplier;
-      } else if (id < 16 && id >= 8) {
+    } else if (id < 16 && id >= 8) {
         score += 20 * scoreMultiplier;
-      } else {
+    } else {
         score += 10 * scoreMultiplier;
-      }
-      scoreDiv.textContent = `Score: ${score}`;
-  
-  }
+    }
+    scoreDiv.textContent = `Score: ${score}`;
+    
+    // Story progression triggers
+    if (score >= 500 && score < 510) {
+        showStoryEvent(
+            "COMMAND: Reinforces ETA 15 minutes. Hold position!",
+            "We're detecting a second wave incoming. The swarm is adapting their tactics."
+        );
+    }
+    if (score >= 1000 && score < 1010) {
+        showStoryEvent(
+            "ALERT: Planetary shield at 42%",
+            "The Zythorians are targeting shield generators. Civilians are being evacuated."
+        );
+    }
+    if (score >= 2000 && score < 2010) {
+        showStoryEvent(
+            "PRIORITY MESSAGE: Reinforces delayed!",
+            "The jump gate is under attack. You must hold for 25 more minutes."
+        );
+    }
+}
 
   export function initTimeAndScore() {
     score = 0;

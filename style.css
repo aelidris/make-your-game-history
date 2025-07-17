@@ -146,7 +146,7 @@ body {
 .time {
     font: 20px f;
     position: absolute;
-    left: 110%;
+    left: 47%;
     top: 5px;
     transform: translateX(-50%);
 }
@@ -154,7 +154,7 @@ body {
 .score { 
     font: 20px f;
     position: absolute;
-    right: -500px;
+    right: 23px;
     top: 5px;
 }
 

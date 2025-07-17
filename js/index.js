@@ -158,6 +158,39 @@ function startGame() {
   }
 }
 
+export function showStoryEvent(title, message) {
+    if (gamePaused || gameOver) return;
+    
+    // Store the current paused state
+    const previousPausedState = gamePaused;
+    
+    const storyEvent = document.createElement('div');
+    storyEvent.className = 'story-event';
+    
+    storyEvent.innerHTML = `
+        <h3>${title}</h3>
+        <p>${message}</p>
+    `;
+    
+    document.querySelector('.box').appendChild(storyEvent);
+    storyEvent.style.display = 'block';
+    
+    // Pause game for the story event
+    gamePaused = true;
+    
+    setTimeout(() => {
+        storyEvent.remove();
+        // Restore the previous paused state
+        gamePaused = previousPausedState;
+        
+        // Only resume if we weren't paused before the event
+        if (!previousPausedState) {
+            startGame();
+            moveBullet();
+        }
+    }, 3000);
+}
+
 export function gameLost() {
     gameRunning = false;
     gameOver = true;
