@@ -1,14 +1,17 @@
+/* ===== FONTS ===== */
 @font-face {
     font-family: f;
     src: url('./fonts/Bruce\ Forever.ttf');
 }
 
+/* ===== BASE STYLES ===== */
 body {
     min-width: 950px;
     background-color: RGB(24, 30, 40);
     color: rgb(226, 59, 59);
 }
 
+/* ===== GAME CONTAINER ===== */
 .box {
     overflow: hidden; 
     background-color: black;
@@ -23,130 +26,120 @@ body {
     align-content: center;
 }
 
+/* ===== TITLE SCREEN ===== */
+/* ===== TITLE SCREEN ===== */
 .game-title {
-    font: 50px f;
+    font: 60px f;
     position: absolute;
-    left: 30%;
-    top: 10%;
-    transform: translate(-20%);
+    left: 50%;
+    top: 4%;
+    transform: translateX(-50%);
+    text-align: center;
+    margin: 0;
+    color: #ff5555;
+    text-shadow: 0 0 10px rgba(255,85,85,0.7);
+    letter-spacing: 2px;
 }
 
-.instructions {
-    font: 17px f;
+.story-intro {
+    font: 20px f;
     position: absolute;
     top: 30%;
-    left: 42%;
-    transform: translate(-40%);
-}
-
-.instructions p {
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+    line-height: 1.6;
+    width: 80%;
+    max-width: 600px;
+    color: #f8f8f8;
+    background-color: rgba(0,0,0,0.7);
+    padding: 20px;
+    border-left: 3px solid #ff5555;
 }
 
+.story-intro p {
+    margin: 10px 0;
+    text-align: left;
+}
 
+.story-intro ul {
+    text-align: left;
+    padding-left: 20px;
+    margin: 15px 0;
+}
+
+.story-intro li {
+    margin-bottom: 8px;
+}
+
+.divider {
+    height: 1px;
+    background-color: #ff5555;
+    margin: 20px auto;
+    width: 80%;
+}
 
 .start-game {
-    font: 15px f;
-    position: absolute;
-    top: 80%;
-    left: 47%;
-    transform: translate(-50%);
-    opacity: 1;
-    transition: opacity 0.5s ease;
+    font: 24px f;
+    position:absolute;
+    top: 83%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ff5555;
+    text-shadow: 0 0 8px rgba(255,85,85,0.7);
+    letter-spacing: 1px;
+    animation: pulse 2s infinite;
 }
 
-.hidden {
-    opacity: 0.2;
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
 }
-
-img {
-    position: absolute;
-}
-
-.lives img {
-    width: 30px;
-}
-
-
-.enemies {
+/* ===== GAME ELEMENTS ===== */
+.game {
     will-change: transform;
-    width: 400px;
-    height: auto;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
-.game{
-    will-change: transform;
-}
-
+/* ===== SHIP AND BULLETS ===== */
 .ship {
     will-change: transform;
     position: absolute;
     transition: transform 0.05s;
 }
 
-.bullet {
+.bullet, .enemyFire {
     will-change: transform;
     position: absolute;
+    background-color: red;
+}
+
+.bullet {
     width: 3px;
     height: 15px;
-    background-color: red;
-
 }
 
 .enemyFire {
-    will-change: transform;
-    position: absolute;
     z-index: 5;
     width: 5px;
     height: 15px;
-    background-color: red;
 }
 
-
-dialog {
-    z-index: 1;
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(248, 119, 68, 0.8);
-    color: white;
-    padding: 25px;
-    border: none;
+/* ===== ENEMIES ===== */
+.enemies {
+    will-change: transform;
+    width: 400px;
+    height: auto;
+    position: relative;
 }
 
-dialog p {
-    font: 25px f;
-    text-align: center;
-    font-size: 20px;
-    margin-bottom: 20px;
-    border: #333;
-    z-index: 1;
-}
-
-dialog button {
-    z-index: 1;
-    font: 20px f;
-    font-size: 16px;
-    padding: 10px 20px;
-    background-color: #0e0d0d;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-dialog button:hover {
-    background-color: #555;
-}
-
-.isSmallScreen {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font: 40px f;
-    z-index: 2;
-    background-color: rgba(56, 55, 55, 1);
+/* ===== UI ELEMENTS ===== */
+.lives img {
+    width: 30px;
+    position: relative;
 }
 
 .time {
@@ -162,5 +155,91 @@ dialog button:hover {
     position: absolute;
     right: -500px;
     top: 5px;
+}
 
+/* ===== DIALOGS/MODALS ===== */
+dialog {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(248, 119, 68, 0.8);
+    color: white;
+    padding: 25px;
+    border: none;
+    width: 80%;
+    max-width: 500px;
+}
+
+dialog p {
+    font: 25px f;
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border: #333;
+}
+
+dialog button {
+    z-index: 1;
+    font: 20px f;
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #0e0d0d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+dialog button:hover {
+    background-color: #555;
+}
+
+.isSmallScreen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font: 40px f;
+    z-index: 2;
+    background-color: rgba(56, 55, 55, 1);
+    width: 90%;
+    text-align: center;
+}
+
+/* ===== STORY EVENTS ===== */
+.story-event {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 30px;
+    border: 2px solid #ff5555;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    z-index: 10;
+    font-family: f;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(255, 85, 85, 0.5);
+}
+
+.story-event h3 {
+    color: #ff5555;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.story-event p {
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+/* ===== RESPONSIVE ELEMENTS ===== */
+img {
+    position: absolute;
 }

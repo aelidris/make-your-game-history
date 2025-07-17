@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <title>Space Invaders</title>
   <link rel="icon" type="image/x-icon" href="/images/icons8-space-invaders-96.png">
 </head>
+
 <body>
   <div class="box">
     <dialog id="isSmallScreen" class="isSmallScreen">
@@ -20,7 +22,7 @@
         <p>Game over</p>
         <button id="tryAgain">Try Again!</button>
       </form>
-    </dialog>  
+    </dialog>
 
     <dialog id="pauseScreen">
       <form method="dialog">
@@ -31,15 +33,17 @@
     </dialog>
     <div class="title">
       <p class="game-title">Space Invaders</p>
-      <div class="instructions">
-        <p>Instructions:</p>
-        <p>Use left/right arrow to move the ship</p>
-        <p>Space to shoot</p>
-        <p>Esc to pause</p>
-        <p>Press f5 to restart</p>
+      <div class="story-intro">
+        <ul>
+          <li>You must hold the line against the AlphaHordeWarm</li>
+          <li>Use left/right arrow to move the ship</li>
+          <li>Our orbital defenses are down</li>
+          <li>The planetary shield is failing</li>
+        </ul>
+        <div class="divider"></div>
+        <p>30 million lives depend on your survival until reinforcements arrive</p>
       </div>
-      <p class="start-game">Press space to start the game</p>
-
+      <p class="start-game">Press space to begin your last stand</p>
     </div>
     <div class="game" hidden>
       <div class="lives"></div>
@@ -52,4 +56,5 @@
   </div>
   <script type="module" src="js/index.js"></script>
 </body>
+
 </html>
