@@ -1,0 +1,166 @@
+@font-face {
+    font-family: f;
+    src: url('./fonts/Bruce\ Forever.ttf');
+}
+
+body {
+    min-width: 950px;
+    background-color: RGB(24, 30, 40);
+    color: rgb(226, 59, 59);
+}
+
+.box {
+    overflow: hidden; 
+    background-color: black;
+    width: 900px;
+    height: 600px;
+    border: 1px solid white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-content: center;
+}
+
+.game-title {
+    font: 50px f;
+    position: absolute;
+    left: 30%;
+    top: 10%;
+    transform: translate(-20%);
+}
+
+.instructions {
+    font: 17px f;
+    position: absolute;
+    top: 30%;
+    left: 42%;
+    transform: translate(-40%);
+}
+
+.instructions p {
+    text-align: center;
+}
+
+
+
+.start-game {
+    font: 15px f;
+    position: absolute;
+    top: 80%;
+    left: 47%;
+    transform: translate(-50%);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    opacity: 0.2;
+}
+
+img {
+    position: absolute;
+}
+
+.lives img {
+    width: 30px;
+}
+
+
+.enemies {
+    will-change: transform;
+    width: 400px;
+    height: auto;
+}
+
+.game{
+    will-change: transform;
+}
+
+.ship {
+    will-change: transform;
+    position: absolute;
+    transition: transform 0.05s;
+}
+
+.bullet {
+    will-change: transform;
+    position: absolute;
+    width: 3px;
+    height: 15px;
+    background-color: red;
+
+}
+
+.enemyFire {
+    will-change: transform;
+    position: absolute;
+    z-index: 5;
+    width: 5px;
+    height: 15px;
+    background-color: red;
+}
+
+
+dialog {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(248, 119, 68, 0.8);
+    color: white;
+    padding: 25px;
+    border: none;
+}
+
+dialog p {
+    font: 25px f;
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border: #333;
+    z-index: 1;
+}
+
+dialog button {
+    z-index: 1;
+    font: 20px f;
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #0e0d0d;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+dialog button:hover {
+    background-color: #555;
+}
+
+.isSmallScreen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font: 40px f;
+    z-index: 2;
+    background-color: rgba(56, 55, 55, 1);
+}
+
+.time {
+    font: 20px f;
+    position: absolute;
+    left: 110%;
+    top: 5px;
+    transform: translateX(-50%);
+}
+
+.score { 
+    font: 20px f;
+    position: absolute;
+    right: -500px;
+    top: 5px;
+
+}
