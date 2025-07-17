@@ -159,9 +159,24 @@ function startGame() {
 }
 
 export function gameLost() {
-  gameRunning = false;
-  gameOver = true;
-  gameOverScreen.show();
+    gameRunning = false;
+    gameOver = true;
+    
+    const storyConclusion = document.createElement('div');
+    storyConclusion.className = 'story-event';
+    storyConclusion.style.display = 'block';
+    storyConclusion.style.backgroundColor = 'rgba(150, 0, 0, 0.9)';
+    
+    storyConclusion.innerHTML = `
+        <h3>MISSION FAILED</h3>
+        <p>The ARK-7 has been destroyed. Without our defense,</p>
+        <p>the Zythorian swarm has breached the planetary shield.</p>
+        <p>Humanity's last colony has fallen...</p>
+    `;
+    
+    gameOverScreen.querySelector('p').innerHTML = '';
+    gameOverScreen.querySelector('p').appendChild(storyConclusion);
+    gameOverScreen.show();
 }
 
 function resetGame() {

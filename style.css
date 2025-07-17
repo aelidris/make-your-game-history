@@ -109,6 +109,7 @@ body {
     will-change: transform;
     position: absolute;
     transition: transform 0.05s;
+    top: 3%;
 }
 
 .bullet, .enemyFire {
