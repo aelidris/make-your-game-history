@@ -1,4 +1,4 @@
-import { createShip, moveShip, fireBullet, moveBullet, bulletExists, addLives,addTime,initTimeAndScore } from "./ship.js";
+import { createShip, moveShip, fireBullet, moveBullet, bulletExists, addLives, addTime, initTimeAndScore } from "./ship.js";
 import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies, gameSettings, levelSettings } from "./enemy.js";
 
 export const gameDiv = document.querySelector(".game");
@@ -84,7 +84,7 @@ window.addEventListener("load", () => {
   createEnemies(32);
   addLives();
   startEnemyShooting();
-  
+
 
   const startGameBtn = document.querySelector(".start-game");
 
@@ -102,9 +102,9 @@ document.addEventListener("keydown", (e) => {
   }
 
 
-  if ((e.code === "Space" || e.key === " ") && !gameKeys["Space"]){
-    if (gameRunning && !gamePaused && !bulletExists){
-      gameKeys["Space"] = true; 
+  if ((e.code === "Space" || e.key === " ") && !gameKeys["Space"]) {
+    if (gameRunning && !gamePaused && !bulletExists) {
+      gameKeys["Space"] = true;
     }
 
     if (!gameRunning && !gamePaused && !gameOver) {
@@ -139,7 +139,7 @@ document.addEventListener("keyup", (e) => {
   if (e.code === "Space" || e.key === " ") {
     gameKeys["Space"] = false;
   }
-  
+
 });
 
 console.log(boxBCR);
@@ -169,7 +169,7 @@ function resetGame() {
   gameRunning = true;
   gameOver = false;
   gamePaused = false;
-  
+
   gameSettings.makeEnemiesShootFaster = 5;
   levelSettings.winTheGame = 1;
   // addScore();

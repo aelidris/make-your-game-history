@@ -1,6 +1,6 @@
 import { boxBCR, gameDiv, gameOver, gamePaused, keys } from "./index.js";
-import { gameRunning,gameLost } from "./index.js";
-import { enemyDestroyed,scoreMultiplier,windowFocused } from "./enemy.js";
+import { gameRunning, gameLost } from "./index.js";
+import { enemyDestroyed, scoreMultiplier, windowFocused } from "./enemy.js";
 
 export const scoreDiv = document.querySelector(".score")
 
@@ -23,7 +23,7 @@ export function createShip() {
 }
 
 export function moveShip() {
-    if (gameRunning) { 
+    if (gameRunning) {
         if (keys[0]) {
             if (keys[0] == 'r' && shipX < boxBCR.width - 52) shipX += 5;
             else if (shipX >= 2) shipX -= 5;
@@ -46,8 +46,8 @@ export function fireBullet() {
 
     bullet.style.transform = `translate(${bulletX}px, ${bulletY}px)`
     gameDiv.appendChild(bullet);
-    
-    
+
+
     moveBullet();
 }
 
@@ -65,7 +65,7 @@ export function moveBullet() {
             bulletExists = false;
             return;
         }
-        bulletY -= 10;
+        bulletY -= 5;
         bullet.style.transform = `translate(${bulletX}px, ${bulletY}px)`
         requestAnimationFrame(moveBullet)
     }
@@ -81,9 +81,9 @@ export function addLives() {
         const divLive = document.createElement("img");
         divLive.src = "../images/life.png";
         divLive.style.transform = `translate(${left}px, 0)`
-        divLive.setAttribute("id",`life-${i}`);
+        divLive.setAttribute("id", `life-${i}`);
         left += 30
-        divLive.onload =() =>{
+        divLive.onload = () => {
 
             liveSpan.appendChild(divLive);
         }
@@ -94,46 +94,46 @@ export function isBulletHitPlayer(bulletBCR) {
     const playerBCR = document.querySelector(".ship").getBoundingClientRect();
     if (bulletBCR.right > playerBCR.left && bulletBCR.left < playerBCR.right &&
         bulletBCR.bottom > playerBCR.top && bulletBCR.top < playerBCR.bottom) {
-            
-            lives--;
-            lives > 0 ? document.getElementById(`life-${lives}`).remove() : (document.getElementById(`life-${lives}`).remove(), gameLost());
-            return true;
-        }
+
+        lives--;
+        lives > 0 ? document.getElementById(`life-${lives}`).remove() : (document.getElementById(`life-${lives}`).remove(), gameLost());
+        return true;
+    }
     return false;
 }
 
 export function addScore(id) {
-      if (id < 8) {
+    if (id < 8) {
         score += 30 * scoreMultiplier;
-      } else if (id < 16 && id >= 8) {
+    } else if (id < 16 && id >= 8) {
         score += 20 * scoreMultiplier;
-      } else {
+    } else {
         score += 10 * scoreMultiplier;
-      }
-      scoreDiv.textContent = `Score: ${score}`;
-  
-  }
+    }
+    scoreDiv.textContent = `Score: ${score}`;
 
-  export function initTimeAndScore() {
+}
+
+export function initTimeAndScore() {
     score = 0;
     scoreDiv.innerHTML = `Score:${score}`;
     sec = 0;
     min = 0;
-    timeDiv.innerHTML = `Time:${min.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`
+    timeDiv.innerHTML = `Time:${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`
 }
 
 
-  const timeDiv = document.querySelector(".time");
-  export let sec;
-  let min;
-  export function addTime(){
-    
+const timeDiv = document.querySelector(".time");
+export let sec;
+let min;
+export function addTime() {
+
     if (gameRunning && !gamePaused && windowFocused) {
         sec++;
         if (sec % 60 === 0) {
             sec = 0;
             min++;
         }
-        timeDiv.innerHTML = `Time:${min.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`;
+        timeDiv.innerHTML = `Time:${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
     }
 }

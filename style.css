@@ -10,7 +10,7 @@ body {
 }
 
 .box {
-    overflow: hidden; 
+    overflow: hidden;
     background-color: black;
     width: 900px;
     height: 600px;
@@ -74,7 +74,7 @@ img {
     height: auto;
 }
 
-.game{
+.game {
     will-change: transform;
 }
 
@@ -87,19 +87,39 @@ img {
 .bullet {
     will-change: transform;
     position: absolute;
-    width: 3px;
-    height: 15px;
-    background-color: red;
-
+    width: 2px;
+    height: 25px;
+    background: linear-gradient(to top, #00ffff, #0088ff);
+    box-shadow:
+        0 0 3px #00ffff,
+        0 0 6px #0088ff;
+    border-radius: 1px;
+    z-index: 10;
 }
 
 .enemyFire {
     will-change: transform;
     position: absolute;
-    z-index: 5;
-    width: 5px;
-    height: 15px;
-    background-color: red;
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(to top, #ff0000, #ff5a5a);
+    border-radius: 2px;
+    box-shadow:
+        0 0 5px #ff0000,
+        0 0 10px #ff3333,
+        0 0 15px #ff5555;
+    z-index: 10;
+    animation: bulletPulse 0.5s infinite alternate;
+}
+
+@keyframes bulletPulse {
+    0% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 
@@ -157,7 +177,7 @@ dialog button:hover {
     transform: translateX(-50%);
 }
 
-.score { 
+.score {
     font: 20px f;
     position: absolute;
     right: -500px;
