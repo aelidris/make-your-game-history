@@ -176,7 +176,7 @@ export function stopEnemyShooting() {
 // --- END NEW/MODIFIED ---
 
 export const levelSettings = {
-    winTheGame: 1
+    winTheGame: 0
 }
 let levelsWinMessageTime = 500;
 export function enemyDestroyed(bBCR) {

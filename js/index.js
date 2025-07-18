@@ -1,5 +1,5 @@
 import { createShip, moveShip, fireBullet, moveBullet, bulletExists, addLives, addTime, initTimeAndScore } from "./ship.js";
-import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies } from "./enemy.js";
+import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies, gameSettings, levelSettings } from "./enemy.js";
 
 export const gameDiv = document.querySelector(".game");
 export let boxBCR = document.querySelector(".box").getBoundingClientRect();
@@ -191,6 +191,8 @@ function resetGame() {
   gameRunning = true;
   gameOver = false;
   gamePaused = false;
+  gameSettings.makeEnemiesShootFaster = 5;
+  levelSettings.winTheGame = 0;
   createShip();
   clearEnemies();
   createEnemies(32);
