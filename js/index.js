@@ -1,5 +1,5 @@
 import { createShip, moveShip, fireBullet, moveBullet, bulletExists, addLives, addTime, initTimeAndScore } from "./ship.js";
-import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies, gameSettings, levelSettings } from "./enemy.js";
+import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies } from "./enemy.js";
 
 export const gameDiv = document.querySelector(".game");
 export let boxBCR = document.querySelector(".box").getBoundingClientRect();
@@ -20,6 +20,8 @@ export const gameKeys = {
   Space: false,
 };
 
+let pausedBullets = [];
+
 export const keys = []
 
 window.addEventListener('resize', () => {
@@ -27,6 +29,27 @@ window.addEventListener('resize', () => {
   checkScreen();
 });
 
+function storeBulletPositions() {
+  pausedBullets = [];
+  document.querySelectorAll('.enemyFire').forEach(bullet => {
+    const rect = bullet.getBoundingClientRect();
+    pausedBullets.push({
+      element: bullet,
+      top: rect.top,
+      left: rect.left
+    });
+  });
+}
+
+function restoreBulletPositions() {
+  pausedBullets.forEach(bulletData => {
+    if (bulletData.element.isConnected) {
+      bulletData.element.style.top = `${bulletData.top}px`;
+      bulletData.element.style.left = `${bulletData.left}px`;
+    }
+  });
+  pausedBullets = [];
+}
 
 function checkScreen() {
   if (tooSmallScreen() && gameRunning && !gamePaused && !gameOver) {
@@ -51,12 +74,12 @@ function tooSmallScreen() {
 
 
 resumeBtn.addEventListener("click", () => {
+  restoreBulletPositions(); // Restore positions when resuming
   pauseScreen.close();
   gamePaused = false;
   startGame();
   moveBullet();
 });
-
 
 
 
@@ -122,9 +145,11 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.code === "Escape") {
     if (gameRunning && !gamePaused) {
+      storeBulletPositions(); // Store positions when pausing
       pauseScreen.show();
       gamePaused = true;
     } else if (gamePaused) {
+      restoreBulletPositions(); // Restore positions when resuming
       pauseScreen.close();
       gamePaused = false;
       startGame();
@@ -142,10 +167,7 @@ document.addEventListener("keyup", (e) => {
 
 });
 
-console.log(boxBCR);
 function startGame() {
-
-
   if (!gamePaused && !gameOver) {
     moveShip();
     moveEnemies();
@@ -169,10 +191,6 @@ function resetGame() {
   gameRunning = true;
   gameOver = false;
   gamePaused = false;
-
-  gameSettings.makeEnemiesShootFaster = 5;
-  levelSettings.winTheGame = 1;
-  // addScore();
   createShip();
   clearEnemies();
   createEnemies(32);

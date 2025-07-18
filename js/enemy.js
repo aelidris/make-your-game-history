@@ -1,15 +1,16 @@
-import { boxBCR, gameLost, gamePaused, gameOver } from "./index.js";
-import { gameRunning } from "./index.js";
-import { isBulletHitPlayer, addScore } from "./ship.js"
-let enemyBulletFrequency = 3000;
-let enemyBulletSpeed = 2;
+import { boxBCR, gameLost, gamePaused, gameOver, gameRunning } from "./index.js";
+import { isBulletHitPlayer, addScore } from "./ship.js";
+
+let enemyBulletFrequency = 3000; // Time in milliseconds between enemy shots
+let enemyBulletSpeed = 2; // Initial speed, consider using gameSettings.makeEnemiesShootFaster instead
 export let scoreMultiplier = 1;
 
 const enemyDiv = document.querySelector(".enemies");
+const activeBulletAnimations = new Map();
 
 let enemyDirection = 1, enemyX = 30, enemyY = 50;
 export let windowFocused = true;
-export let bulletExists = false;
+// export let bulletExists = false; // This variable is not used in the provided code, can be removed if not used elsewhere
 
 window.addEventListener('focus', () => {
     windowFocused = true;
@@ -19,11 +20,9 @@ window.addEventListener('blur', () => {
     windowFocused = false;
 });
 
-
-
 export function clearEnemies() {
-    const enemies = document.querySelectorAll('.enemy'); // Select all enemies
-    enemies.forEach(enemy => enemy.remove()); // Remove each enemy
+    const enemies = document.querySelectorAll('.enemy');
+    enemies.forEach(enemy => enemy.remove());
 }
 
 export function createEnemies(enemyCount) {
@@ -57,7 +56,6 @@ export function createEnemies(enemyCount) {
 }
 
 export function moveEnemies() {
-
     if (gameRunning && !gamePaused && windowFocused) {
         if (enemyTouching()) {
             enemyDirection *= -1;
@@ -69,82 +67,113 @@ export function moveEnemies() {
 }
 
 function enemyTouching() {
-
     const enemies = document.querySelectorAll('.enemy');
     let touching = false;
     enemies.forEach((enemy) => {
         const enemyBCR = enemy.getBoundingClientRect();
-
         if (enemyBCR.bottom > boxBCR.bottom - 80) gameLost();
         if (enemyBCR.right >= boxBCR.right || enemyBCR.left <= boxBCR.left) touching = true;
     })
     return touching;
 }
 
-const enemyFire = document.createElement("div")
-
-enemyFire.setAttribute('class', 'enemyFire');
+// Re-using a single bullet div is problematic if multiple bullets can be on screen simultaneously.
+// We need to create a new div for each bullet.
+// const enemyFire = document.createElement("div") // This line should be removed or commented out.
 
 function createEnemyBullet(enemyFireX, enemyFireY) {
-    enemyFire.style.left = `${enemyFireX}px`;
-    enemyFire.style.top = `${enemyFireY + enemyBulletSpeed}px`;
-    document.body.appendChild(enemyFire);
-    return enemyFire;
-
+    const bullet = document.createElement("div"); // Create a new div for each bullet
+    bullet.setAttribute('class', 'enemyFire'); // Assign the class
+    bullet.style.left = `${enemyFireX}px`;
+    bullet.style.top = `${enemyFireY}px`; // Initial position is enemy's bottom
+    document.body.appendChild(bullet);
+    return bullet;
 }
 
 function enemyShoot() {
-    if (!windowFocused || gamePaused || !gameRunning || gameOver) return;
-
     const enemies = document.querySelectorAll('.enemy');
     if (enemies.length > 0) {
         const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
         const enemyBCR = randomEnemy.getBoundingClientRect();
-        // Create a bullet from the enemy's position
-        const bullet = createEnemyBullet(enemyBCR.left + enemyBCR.width / 2, enemyBCR.top + enemyBCR.height);
-        // Move the bullet downward
+        const bullet = createEnemyBullet(enemyBCR.left + enemyBCR.width / 2 - 2, enemyBCR.top + enemyBCR.height); // Adjust -2 for centering
         moveEnemyBullet(bullet);
     }
 }
 
 export const gameSettings = {
-    makeEnemiesShootFaster: 5
+    makeEnemiesShootFaster: 5 // Speed of enemy bullets
 };
 
 function moveEnemyBullet(bullet) {
-    function move() {
+    let lastTime = performance.now();
+    let accumulatedPauseTime = 0;
+    let pauseStartTime = 0;
+    
+    function move(currentTime) {
         if (gamePaused) {
-            bullet.remove();
+            if (pauseStartTime === 0) {
+                pauseStartTime = currentTime;
+            }
+            activeBulletAnimations.set(bullet, requestAnimationFrame(move));
             return;
         }
+        
+        // Handle resume from pause
+        if (pauseStartTime > 0) {
+            accumulatedPauseTime += currentTime - pauseStartTime;
+            pauseStartTime = 0;
+        }
+        
+        const adjustedTime = currentTime - accumulatedPauseTime;
+        const deltaTime = adjustedTime - lastTime;
+        lastTime = adjustedTime;
+        
         const bulletBCR = bullet.getBoundingClientRect();
-
-        bullet.style.top = `${bulletBCR.top + gameSettings.makeEnemiesShootFaster}px`;
-
-        if (bulletBCR.bottom < boxBCR.bottom && !isBulletHitPlayer(bulletBCR)) {
-            requestAnimationFrame(move);
+        const movement = gameSettings.makeEnemiesShootFaster * (deltaTime / 16);
+        const newTop = bulletBCR.top + movement;
+        
+        bullet.style.top = `${newTop}px`;
+        
+        if (newTop < boxBCR.bottom && !isBulletHitPlayer(bullet.getBoundingClientRect())) {
+            activeBulletAnimations.set(bullet, requestAnimationFrame(move));
         } else {
             bullet.remove();
+            activeBulletAnimations.delete(bullet);
         }
     }
-
-    requestAnimationFrame(move);
-
+    
+    activeBulletAnimations.set(bullet, requestAnimationFrame(move));
 }
+// --- NEW/MODIFIED: startEnemyShooting function ---
+let enemyShootingLoopId; // To hold the ID of the requestAnimationFrame loop
+let lastEnemyShotTime = 0; // Tracks when the last bullet was fired
 
-let lastEnemyShotTime = 0;
+/**
+ * Initiates the continuous enemy shooting loop.
+ * This function should be called once to start enemies firing.
+ */
 export function startEnemyShooting() {
-    let time = Date.now();
-
-    // Stop shooting when the game is won
-    if (levelSettings.winTheGame >= 4) {
-        return; // Exit the function, stopping enemy shooting
-    }
+    if (levelSettings.winTheGame >= 4) return;
+    
+    const time = Date.now();
     if (gameRunning && !gamePaused && !gameOver && time - lastEnemyShotTime > enemyBulletFrequency) {
         enemyShoot();
-        lastEnemyShotTime = time; // Update the last shot time
+        lastEnemyShotTime = time;
     }
 }
+
+/**
+ * Stops the continuous enemy shooting loop.
+ * Call this when the game ends or enemy shooting should cease.
+ */
+export function stopEnemyShooting() {
+    if (enemyShootingLoopId) {
+        cancelAnimationFrame(enemyShootingLoopId);
+        enemyShootingLoopId = null;
+        console.log("Enemy shooting loop stopped.");
+    }
+}
+// --- END NEW/MODIFIED ---
 
 export const levelSettings = {
     winTheGame: 1
@@ -159,7 +188,7 @@ export function enemyDestroyed(bBCR) {
             enemy.remove();
             hit = true;
             addScore(enemy.id);
-            if (enemies.length <= 1) {
+            if (document.querySelectorAll('.enemy').length === 0) { // Check remaining enemies AFTER removal
                 levelSettings.winTheGame++;
                 // Create the main box div
                 const box = document.createElement("div");
@@ -185,6 +214,7 @@ export function enemyDestroyed(bBCR) {
                     levelText.textContent = "🎖️ You did it! A legendary win!";
                     // Reload the page after 5 seconds
                     levelsWinMessageTime = 5000;
+                    stopEnemyShooting(); // Stop shooting when the game is definitively won
                 } else {
                     levelText.textContent = "LEVEL " + levelSettings.winTheGame;
                 }
@@ -202,14 +232,14 @@ export function enemyDestroyed(bBCR) {
                 // Append the box to the document body
                 document.body.appendChild(box);
 
-                // Remove the div after 1 second
+                // Remove the div after the specified time
                 setTimeout(() => {
                     if (levelsWinMessageTime == 5000) {
                         location.reload();
                     } else {
                         box.remove(); // This removes the div from the DOM
-                        gameSettings.makeEnemiesShootFaster += 5;
-                        createEnemies(32);
+                        gameSettings.makeEnemiesShootFaster += 5; // Increase bullet speed for next level
+                        createEnemies(32); // Create new enemies for the next level
                     }
                 }, levelsWinMessageTime);
             }
@@ -217,4 +247,3 @@ export function enemyDestroyed(bBCR) {
     })
     return hit;
 }
-
