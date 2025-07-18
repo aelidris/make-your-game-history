@@ -184,3 +184,34 @@ dialog button:hover {
     top: 5px;
 
 }
+
+.level-message {
+    font-family: 'Courier New', monospace;
+    color: #00ff00; /* Classic green terminal color */
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; /* Glow effect */
+    line-height: 1.5;
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.level-message h2 {
+    color: #ff5555; /* Red for headings */
+    text-shadow: 0 0 5px #ff0000;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.level-message p {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.level-message .highlight {
+    color: #ffff00; /* Yellow for important text */
+    font-weight: bold;
+}

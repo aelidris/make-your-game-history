@@ -108,7 +108,7 @@ function moveEnemyBullet(bullet) {
     let lastTime = performance.now();
     let accumulatedPauseTime = 0;
     let pauseStartTime = 0;
-    
+
     function move(currentTime) {
         if (gamePaused) {
             if (pauseStartTime === 0) {
@@ -117,23 +117,23 @@ function moveEnemyBullet(bullet) {
             activeBulletAnimations.set(bullet, requestAnimationFrame(move));
             return;
         }
-        
+
         // Handle resume from pause
         if (pauseStartTime > 0) {
             accumulatedPauseTime += currentTime - pauseStartTime;
             pauseStartTime = 0;
         }
-        
+
         const adjustedTime = currentTime - accumulatedPauseTime;
         const deltaTime = adjustedTime - lastTime;
         lastTime = adjustedTime;
-        
+
         const bulletBCR = bullet.getBoundingClientRect();
         const movement = gameSettings.makeEnemiesShootFaster * (deltaTime / 16);
         const newTop = bulletBCR.top + movement;
-        
+
         bullet.style.top = `${newTop}px`;
-        
+
         if (newTop < boxBCR.bottom && !isBulletHitPlayer(bullet.getBoundingClientRect())) {
             activeBulletAnimations.set(bullet, requestAnimationFrame(move));
         } else {
@@ -141,7 +141,7 @@ function moveEnemyBullet(bullet) {
             activeBulletAnimations.delete(bullet);
         }
     }
-    
+
     activeBulletAnimations.set(bullet, requestAnimationFrame(move));
 }
 // --- NEW/MODIFIED: startEnemyShooting function ---
@@ -154,7 +154,7 @@ let lastEnemyShotTime = 0; // Tracks when the last bullet was fired
  */
 export function startEnemyShooting() {
     if (levelSettings.winTheGame >= 4) return;
-    
+
     const time = Date.now();
     if (gameRunning && !gamePaused && !gameOver && time - lastEnemyShotTime > enemyBulletFrequency) {
         enemyShoot();
@@ -188,8 +188,9 @@ export function enemyDestroyed(bBCR) {
             enemy.remove();
             hit = true;
             addScore(enemy.id);
-            if (document.querySelectorAll('.enemy').length === 0) { // Check remaining enemies AFTER removal
+            if (document.querySelectorAll('.enemy').length === 0) {
                 levelSettings.winTheGame++;
+
                 // Create the main box div
                 const box = document.createElement("div");
                 box.classList.add("box");
@@ -205,41 +206,86 @@ export function enemyDestroyed(bBCR) {
                 box.style.top = "50%";
                 box.style.transform = "translate(-50%, -50%)";
                 box.style.display = "flex";
+                box.style.flexDirection = "column";
                 box.style.justifyContent = "center";
                 box.style.alignItems = "center";
+                box.style.padding = "20px";
+                box.style.textAlign = "center";
 
-                // Create the text element
-                const levelText = document.createElement("div");
-                if (levelSettings.winTheGame == 4) {
-                    levelText.textContent = "🎖️ You did it! A legendary win!";
-                    // Reload the page after 5 seconds
-                    levelsWinMessageTime = 5000;
-                    stopEnemyShooting(); // Stop shooting when the game is definitively won
-                } else {
-                    levelText.textContent = "LEVEL " + levelSettings.winTheGame;
+                // Create the content container
+                const content = document.createElement("div");
+
+                // Show different historical facts based on the level
+                let historyContent;
+                switch (levelSettings.winTheGame) {
+                    case 1:
+                        historyContent = `
+                            <div class="level-message">
+                                <h2>ALIEN FRONTLINE BREACHED</h2>
+                                <p>At this stage, you've already broken through the enemy's front lines.</p>
+                                <p>The war is about to intensify against the <span class="highlight">alien forces</span> trying to take over planet Earth.</p>
+                                <p class="highlight">Don't let your guard down — stay strong!</p>
+                                <p>A greater battle is coming soon...</p>
+                            </div>
+                        `;
+                        levelsWinMessageTime = 20000;
+                        break;
+                    case 2:
+                        historyContent = `
+                            <div class="level-message">
+                                <h2>ENEMY REINFORCEMENTS DETECTED</h2>
+                                <p>You've noticed the war intensity has increased.</p>
+                                <p>The enemies have grown <span class="highlight">stronger</span>, but you've defended our planet well.</p>
+                                <p>Our surveillance has detected <span class="highlight">another enemy army</span> approaching.</p>
+                                <p class="highlight">Stay focused and stand your ground!</p>
+                            </div>
+                        `;
+                        levelsWinMessageTime = 20000;
+                        break;
+                    case 3:
+                        historyContent = `
+                            <div class="level-message">
+                                <h2>VICTORY ACHIEVED</h2>
+                                <p>It was a <span class="highlight">fierce war</span>, and you emerged victorious!</p>
+                                <p>The people of Earth are proud of your efforts.</p>
+                                <p>Enemies deployed <span class="highlight">powerful launchers</span>, but you destroyed their entire fleet!</p>
+                                <p class="highlight">No enemy movements detected...</p>
+                                <p>This might have been their final wave.</p>
+                            </div>
+                        `;
+                        levelsWinMessageTime = 20000;
+                        break;
+                    case 4:
+                        historyContent = `
+                            <div class="level-message">
+                                <h2>FINAL BATTLE WON</h2>
+                                <p class="highlight">ALERT: Hidden enemy wave detected!</p>
+                                <p>We hadn't anticipated this <span class="highlight">trump card</span> from distant galaxies.</p>
+                                <p>This could have been a <span class="highlight">fatal strike</span> to our planet.</p>
+                                <p>Thank you for <span class="highlight">saving Earth</span> from destruction!</p>
+                                <p>Surveillance systems upgraded. Planet secured.</p>
+                                <p class="highlight" style="font-size: 24px;">MISSION ACCOMPLISHED</p>
+                            </div>
+                        `;
+                        levelsWinMessageTime = 20000;
+                        stopEnemyShooting();
+                        break;
                 }
 
-                // Style the text
-                levelText.style.color = "white";
-                levelText.style.fontSize = "100px";
-                levelText.style.fontWeight = "bold";
-                levelText.style.fontFamily = "Arial, sans-serif";
-                levelText.style.textTransform = "uppercase";
-
-                // Append the text to the box
-                box.appendChild(levelText);
+                content.innerHTML = historyContent;
+                box.appendChild(content);
 
                 // Append the box to the document body
                 document.body.appendChild(box);
 
                 // Remove the div after the specified time
                 setTimeout(() => {
-                    if (levelsWinMessageTime == 5000) {
+                    if (levelSettings.winTheGame === 4) {
                         location.reload();
                     } else {
-                        box.remove(); // This removes the div from the DOM
-                        gameSettings.makeEnemiesShootFaster += 5; // Increase bullet speed for next level
-                        createEnemies(32); // Create new enemies for the next level
+                        box.remove();
+                        gameSettings.makeEnemiesShootFaster += 5;
+                        createEnemies(32);
                     }
                 }, levelsWinMessageTime);
             }
