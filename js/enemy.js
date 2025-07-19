@@ -267,7 +267,7 @@ export function enemyDestroyed(bBCR) {
                                 <p class="highlight" style="font-size: 24px;">MISSION ACCOMPLISHED</p>
                             </div>
                         `;
-                        levelsWinMessageTime = 20000;
+                        levelsWinMessageTime = 40000;
                         stopEnemyShooting();
                         break;
                 }

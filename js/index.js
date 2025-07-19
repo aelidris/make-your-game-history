@@ -116,6 +116,57 @@ window.addEventListener("load", () => {
   }, 700);
 });
 
+const storyScreen = document.createElement('div');
+storyScreen.className = 'story-screen';
+storyScreen.style.cssText = `
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  font-family: 'Courier New', monospace;
+  color: #00ff00;
+  text-align: center;
+`;
+
+const storyContent = document.createElement('div');
+storyContent.className = 'story-content';
+storyContent.style.cssText = `
+  max-width: 80%;
+  padding: 30px;
+  border: 2px solid #00ff00;
+  border-radius: 10px;
+  background-color: rgba(0, 20, 0, 0.7);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  animation: pulse 2s infinite alternate;
+`;
+
+storyContent.innerHTML = `
+  <h2 style="color: #ff5555; font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);">EARTH'S LAST DEFENSE</h2>
+  <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">The year is 2147. Alien forces have launched a full-scale invasion.</p>
+  <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">As Earth's most advanced defense system, you're our last hope.</p>
+  <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">The enemy comes in waves - each more dangerous than the last.</p>
+  <p class="highlight" style="color: #ffff00; font-weight: bold; font-size: 1.3rem; margin-top: 30px;">Press SPACE to activate defense systems...</p>
+`;
+
+storyScreen.appendChild(storyContent);
+document.body.appendChild(storyScreen);
+
+// Add the pulse animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes pulse {
+    0% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+`;
+document.head.appendChild(style);
+
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowLeft") {
     if (!keys.includes('l')) keys.unshift("l")
@@ -129,6 +180,10 @@ document.addEventListener("keydown", (e) => {
     if (gameRunning && !gamePaused && !bulletExists) {
       gameKeys["Space"] = true;
     }
+
+    if (storyScreen.style.display !== 'none') {
+        storyScreen.style.display = 'none';
+      }
 
     if (!gameRunning && !gamePaused && !gameOver) {
       titleDiv.remove();
@@ -156,6 +211,14 @@ document.addEventListener("keydown", (e) => {
       moveBullet();
     }
   }
+});
+
+[resumeBtn, restartBtn, tryAgainBtn].forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (storyScreen.style.display !== 'none') {
+      storyScreen.style.display = 'none';
+    }
+  });
 });
 
 document.addEventListener("keyup", (e) => {
