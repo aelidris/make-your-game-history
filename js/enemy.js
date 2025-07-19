@@ -1,7 +1,7 @@
 import { boxBCR, gameLost, gamePaused, gameOver, gameRunning } from "./index.js";
 import { isBulletHitPlayer, addScore } from "./ship.js";
 
-let enemyBulletFrequency = 3000;
+let enemyBulletFrequency = 1500;
 export let scoreMultiplier = 1;
 
 const enemyDiv = document.querySelector(".enemies");
@@ -174,8 +174,11 @@ export function enemyDestroyed(bBCR) {
             hit = true;
             addScore(enemy.id);
             if (document.querySelectorAll('.enemy').length === 0) {
-                levelSettings.winTheGame++;
 
+                 document.querySelectorAll('.enemyFire').forEach(bullet => {
+                    bullet.remove();
+                });
+                levelSettings.winTheGame++;
                 const box = document.createElement("div");
                 box.classList.add("storyBox");
                 const content = document.createElement("div");
@@ -243,7 +246,7 @@ export function enemyDestroyed(bBCR) {
                         location.reload();
                     } else {
                         box.remove();
-                        gameSettings.makeEnemiesShootFaster += 5;
+                        gameSettings.makeEnemiesShootFaster += 1;
                         createEnemies(32);
                     }
                 }, levelsWinMessageTime);
