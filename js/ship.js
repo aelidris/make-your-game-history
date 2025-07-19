@@ -3,15 +3,11 @@ import { gameRunning, gameLost } from "./index.js";
 import { enemyDestroyed, scoreMultiplier, windowFocused } from "./enemy.js";
 
 export const scoreDiv = document.querySelector(".score")
-
 const ship = document.createElement("img");
-
 export let shipX, shipY;
 export let bulletExists = false;
 let score;
 let lives;
-
-
 export function createShip() {
     shipX = boxBCR.width / 2 - 25;
     shipY = boxBCR.height - 75;
@@ -21,7 +17,6 @@ export function createShip() {
     ship.style.transform = `translate(${shipX}px,${shipY}px)`;
     gameDiv.appendChild(ship);
 }
-
 export function moveShip() {
     if (gameRunning) {
         if (keys[0]) {
@@ -32,22 +27,15 @@ export function moveShip() {
 
     ship.style.transform = `translate(${shipX}px,${shipY}px)`;
 }
-
 const bullet = document.createElement('div');
-
 bullet.setAttribute('class', 'bullet');
-
 let bulletX, bulletY;
-
 export function fireBullet() {
     bulletExists = true;
     bulletX = shipX + 24;
     bulletY = shipY;
-
     bullet.style.transform = `translate(${bulletX}px, ${bulletY}px)`
     gameDiv.appendChild(bullet);
-
-
     moveBullet();
 }
 
@@ -61,7 +49,6 @@ export function moveBullet() {
         const bulletBCR = bullet.getBoundingClientRect();
         if (bulletBCR.top < boxBCR.top || enemyDestroyed(bulletBCR) /*|| mothershipDestroyed(bulletBCR)*/) {
             bullet.remove();
-
             bulletExists = false;
             return;
         }
@@ -88,13 +75,11 @@ export function addLives() {
             liveSpan.appendChild(divLive);
         }
     }
-
 }
 export function isBulletHitPlayer(bulletBCR) {
     const playerBCR = document.querySelector(".ship").getBoundingClientRect();
     if (bulletBCR.right > playerBCR.left && bulletBCR.left < playerBCR.right &&
         bulletBCR.bottom > playerBCR.top && bulletBCR.top < playerBCR.bottom) {
-
         lives--;
         lives > 0 ? document.getElementById(`life-${lives}`).remove() : (document.getElementById(`life-${lives}`).remove(), gameLost());
         return true;
@@ -111,7 +96,6 @@ export function addScore(id) {
         score += 10 * scoreMultiplier;
     }
     scoreDiv.textContent = `Score: ${score}`;
-
 }
 
 export function initTimeAndScore() {
@@ -122,12 +106,10 @@ export function initTimeAndScore() {
     timeDiv.innerHTML = `Time:${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`
 }
 
-
 const timeDiv = document.querySelector(".time");
 export let sec;
 let min;
 export function addTime() {
-
     if (gameRunning && !gamePaused && windowFocused) {
         sec++;
         if (sec % 60 === 0) {

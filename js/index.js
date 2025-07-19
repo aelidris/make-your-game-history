@@ -24,36 +24,11 @@ let pausedBullets = [];
 
 export const keys = [];
 
-// case in game lost
+// game lost story
 const gameOverStory = document.createElement('div');
 gameOverStory.className = 'game-over-story';
-gameOverStory.style.cssText = `
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  font-family: 'Courier New', monospace;
-  color: #ff0000;
-  text-align: center;
-`;
-
 const gameOverContent = document.createElement('div');
 gameOverContent.className = 'game-over-content';
-gameOverContent.style.cssText = `
-  max-width: 80%;
-  padding: 30px;
-  border: 2px solid #ff0000;
-  border-radius: 10px;
-  background-color: rgba(20, 0, 0, 0.7);
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-`;
-
 gameOverContent.innerHTML = `
   <h2 style="color: #ff5555; font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);">MISSION FAILED</h2>
   <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">The alien forces have overwhelmed our defenses.</p>
@@ -111,9 +86,6 @@ function tooSmallScreen() {
   return window.innerWidth <= boxBCR.width || window.innerHeight <= boxBCR.height;
 }
 
-
-
-
 resumeBtn.addEventListener("click", () => {
   restoreBulletPositions(); // Restore positions when resuming
   pauseScreen.close();
@@ -121,8 +93,6 @@ resumeBtn.addEventListener("click", () => {
   startGame();
   moveBullet();
 });
-
-
 
 restartBtn.addEventListener("click", () => {
   pauseScreen.close();
@@ -137,7 +107,6 @@ tryAgainBtn.addEventListener('click', () => {
   gameOverScreen.close();
   gameRunning = true;
   gameOver = false;
-
   resetGame();
   startGame();
   moveBullet();
@@ -148,22 +117,17 @@ window.addEventListener("load", () => {
   createEnemies(32);
   addLives();
   startEnemyShooting();
-
-
   const startGameBtn = document.querySelector(".start-game");
-
   setInterval(() => {
     startGameBtn.classList.toggle("hidden");
   }, 700);
 });
 
+// start story
 const storyScreen = document.createElement('div');
 storyScreen.className = 'story-screen';
-
-
 const storyContent = document.createElement('div');
 storyContent.className = 'story-content';
-
 storyContent.innerHTML = `
   <h2 style="color: #ff5555; font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);">EARTH'S LAST DEFENSE</h2>
   <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">The year is 2147. Alien forces have launched a full-scale invasion.</p>
@@ -175,16 +139,6 @@ storyContent.innerHTML = `
 storyScreen.appendChild(storyContent);
 document.body.appendChild(storyScreen);
 
-// Add the pulse animation
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes pulse {
-    0% { opacity: 0.9; }
-    100% { opacity: 1; }
-  }
-`;
-document.head.appendChild(style);
-
 document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowLeft") {
     if (!keys.includes('l')) keys.unshift("l")
@@ -192,16 +146,14 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "ArrowRight") {
     if (!keys.includes('r')) keys.unshift("r")
   }
-
-
   if ((e.code === "Space" || e.key === " ") && !gameKeys["Space"]) {
     if (gameRunning && !gamePaused && !bulletExists) {
       gameKeys["Space"] = true;
     }
 
     if (storyScreen.style.display !== 'none') {
-        storyScreen.style.display = 'none';
-      }
+      storyScreen.style.display = 'none';
+    }
 
     if (!gameRunning && !gamePaused && !gameOver) {
       titleDiv.remove();
@@ -219,11 +171,11 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.code === "Escape") {
     if (gameRunning && !gamePaused) {
-      storeBulletPositions(); // Store positions when pausing
+      storeBulletPositions();
       pauseScreen.show();
       gamePaused = true;
     } else if (gamePaused) {
-      restoreBulletPositions(); // Restore positions when resuming
+      restoreBulletPositions();
       pauseScreen.close();
       gamePaused = false;
       startGame();
@@ -246,18 +198,16 @@ document.addEventListener("keyup", (e) => {
   if (e.code === "Space" || e.key === " ") {
     gameKeys["Space"] = false;
   }
-
 });
 
 function startGame() {
   if (!gamePaused && !gameOver) {
     moveShip();
     moveEnemies();
-    if (gameKeys["Space"] && !bulletExists /*&& time -lastShotTime > 3000*/) {
+    if (gameKeys["Space"] && !bulletExists) {
       fireBullet()
     }
     startEnemyShooting();
-
     requestAnimationFrame(startGame)
   }
 }
@@ -270,7 +220,6 @@ export function gameLost() {
 }
 
 function resetGame() {
-
   gameRunning = true;
   gameOver = false;
   gamePaused = false;
@@ -284,10 +233,7 @@ function resetGame() {
   addTime();
 }
 
-//setInterval is used to update the time every second
 setInterval(addTime, 1000)
-
-//initTimeAndScore is called on load and restart
 initTimeAndScore();
 
 requestAnimationFrame(startGame);

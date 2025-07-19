@@ -256,3 +256,28 @@ dialog button:hover {
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
     animation: pulse 2s infinite alternate;
 }
+
+.game-over-story {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    font-family: 'Courier New', monospace;
+    color: #ff0000;
+    text-align: center;
+}
+
+.game-over-content {
+    max-width: 80%;
+    padding: 30px;
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    background-color: rgba(20, 0, 0, 0.7);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}

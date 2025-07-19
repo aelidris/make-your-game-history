@@ -1,8 +1,7 @@
 import { boxBCR, gameLost, gamePaused, gameOver, gameRunning } from "./index.js";
 import { isBulletHitPlayer, addScore } from "./ship.js";
 
-let enemyBulletFrequency = 3000; // Time in milliseconds between enemy shots
-let enemyBulletSpeed = 2; // Initial speed, consider using gameSettings.makeEnemiesShootFaster instead
+let enemyBulletFrequency = 3000;
 export let scoreMultiplier = 1;
 
 const enemyDiv = document.querySelector(".enemies");
@@ -10,7 +9,6 @@ const activeBulletAnimations = new Map();
 
 let enemyDirection = 1, enemyX = 30, enemyY = 50;
 export let windowFocused = true;
-// export let bulletExists = false; // This variable is not used in the provided code, can be removed if not used elsewhere
 
 window.addEventListener('focus', () => {
     windowFocused = true;
@@ -77,15 +75,11 @@ function enemyTouching() {
     return touching;
 }
 
-// Re-using a single bullet div is problematic if multiple bullets can be on screen simultaneously.
-// We need to create a new div for each bullet.
-// const enemyFire = document.createElement("div") // This line should be removed or commented out.
-
 function createEnemyBullet(enemyFireX, enemyFireY) {
-    const bullet = document.createElement("div"); // Create a new div for each bullet
-    bullet.setAttribute('class', 'enemyFire'); // Assign the class
+    const bullet = document.createElement("div");
+    bullet.setAttribute('class', 'enemyFire');
     bullet.style.left = `${enemyFireX}px`;
-    bullet.style.top = `${enemyFireY}px`; // Initial position is enemy's bottom
+    bullet.style.top = `${enemyFireY}px`;
     document.body.appendChild(bullet);
     return bullet;
 }
@@ -101,7 +95,7 @@ function enemyShoot() {
 }
 
 export const gameSettings = {
-    makeEnemiesShootFaster: 5 // Speed of enemy bullets
+    makeEnemiesShootFaster: 5
 };
 
 function moveEnemyBullet(bullet) {
@@ -118,7 +112,6 @@ function moveEnemyBullet(bullet) {
             return;
         }
 
-        // Handle resume from pause
         if (pauseStartTime > 0) {
             accumulatedPauseTime += currentTime - pauseStartTime;
             pauseStartTime = 0;
@@ -144,14 +137,10 @@ function moveEnemyBullet(bullet) {
 
     activeBulletAnimations.set(bullet, requestAnimationFrame(move));
 }
-// --- NEW/MODIFIED: startEnemyShooting function ---
-let enemyShootingLoopId; // To hold the ID of the requestAnimationFrame loop
-let lastEnemyShotTime = 0; // Tracks when the last bullet was fired
+let enemyShootingLoopId;
+let lastEnemyShotTime = 0;
 
-/**
- * Initiates the continuous enemy shooting loop.
- * This function should be called once to start enemies firing.
- */
+
 export function startEnemyShooting() {
     if (levelSettings.winTheGame >= 4) return;
 
@@ -162,10 +151,6 @@ export function startEnemyShooting() {
     }
 }
 
-/**
- * Stops the continuous enemy shooting loop.
- * Call this when the game ends or enemy shooting should cease.
- */
 export function stopEnemyShooting() {
     if (enemyShootingLoopId) {
         cancelAnimationFrame(enemyShootingLoopId);
@@ -173,7 +158,7 @@ export function stopEnemyShooting() {
         console.log("Enemy shooting loop stopped.");
     }
 }
-// --- END NEW/MODIFIED ---
+
 
 export const levelSettings = {
     winTheGame: 0
@@ -191,14 +176,9 @@ export function enemyDestroyed(bBCR) {
             if (document.querySelectorAll('.enemy').length === 0) {
                 levelSettings.winTheGame++;
 
-                // Create the main box div
                 const box = document.createElement("div");
                 box.classList.add("storyBox");
-
-                // Create the content container
                 const content = document.createElement("div");
-
-                // Show different historical facts based on the level
                 let historyContent;
                 switch (levelSettings.winTheGame) {
                     case 1:
@@ -257,11 +237,7 @@ export function enemyDestroyed(bBCR) {
 
                 content.innerHTML = historyContent;
                 box.appendChild(content);
-
-                // Append the box to the document body
                 document.body.appendChild(box);
-
-                // Remove the div after the specified time
                 setTimeout(() => {
                     if (levelSettings.winTheGame === 4) {
                         location.reload();
