@@ -22,7 +22,48 @@ export const gameKeys = {
 
 let pausedBullets = [];
 
-export const keys = []
+export const keys = [];
+
+// case in game lost
+const gameOverStory = document.createElement('div');
+gameOverStory.className = 'game-over-story';
+gameOverStory.style.cssText = `
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  font-family: 'Courier New', monospace;
+  color: #ff0000;
+  text-align: center;
+`;
+
+const gameOverContent = document.createElement('div');
+gameOverContent.className = 'game-over-content';
+gameOverContent.style.cssText = `
+  max-width: 80%;
+  padding: 30px;
+  border: 2px solid #ff0000;
+  border-radius: 10px;
+  background-color: rgba(20, 0, 0, 0.7);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+`;
+
+gameOverContent.innerHTML = `
+  <h2 style="color: #ff5555; font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);">MISSION FAILED</h2>
+  <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">The alien forces have overwhelmed our defenses.</p>
+  <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">Earth has fallen to the invasion.</p>
+  <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.6;">All hope is lost...</p>
+  <p class="highlight" style="color: #ffff00; font-weight: bold; font-size: 1.3rem; margin-top: 30px;">Press ENTER to try again</p>
+`;
+
+gameOverStory.appendChild(gameOverContent);
+document.body.appendChild(gameOverStory);
 
 window.addEventListener('resize', () => {
   boxBCR = document.querySelector(".box").getBoundingClientRect();
@@ -92,6 +133,7 @@ restartBtn.addEventListener("click", () => {
 });
 
 tryAgainBtn.addEventListener('click', () => {
+  gameOverStory.style.display = 'none';
   gameOverScreen.close();
   gameRunning = true;
   gameOver = false;
@@ -99,7 +141,6 @@ tryAgainBtn.addEventListener('click', () => {
   resetGame();
   startGame();
   moveBullet();
-
 })
 
 window.addEventListener("load", () => {
@@ -194,6 +235,7 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.code === 'Enter') {
     if (gameOver) {
+      gameOverStory.style.display = 'none';
       gameRunning = true;
       gameOver = false;
     }
@@ -247,6 +289,7 @@ export function gameLost() {
   gameRunning = false;
   gameOver = true;
   gameOverScreen.show();
+  gameOverStory.style.display = 'flex';
 }
 
 function resetGame() {
