@@ -1,7 +1,7 @@
-import { boxBCR, gameLost, gamePaused, gameOver, gameRunning } from "./index.js";
+import { boxBCR, gameLost, gameState, gameOver, gameRunning, startGame } from "./index.js";
 import { isBulletHitPlayer, addScore } from "./ship.js";
 
-let enemyBulletFrequency = 1500;
+let enemyBulletFrequency = 1000;
 export let scoreMultiplier = 1;
 
 const enemyDiv = document.querySelector(".enemies");
@@ -54,7 +54,7 @@ export function createEnemies(enemyCount) {
 }
 
 export function moveEnemies() {
-    if (gameRunning && !gamePaused && windowFocused) {
+    if (gameRunning && !gameState.paused && windowFocused) {
         if (enemyTouching()) {
             enemyDirection *= -1;
             enemyY += 40;
@@ -104,7 +104,7 @@ function moveEnemyBullet(bullet) {
     let pauseStartTime = 0;
 
     function move(currentTime) {
-        if (gamePaused) {
+        if (gameState.paused) {
             if (pauseStartTime === 0) {
                 pauseStartTime = currentTime;
             }
@@ -142,10 +142,10 @@ let lastEnemyShotTime = 0;
 
 
 export function startEnemyShooting() {
-    if (levelSettings.winTheGame >= 4) return;
+    if (levelSettings.winTheGame >= 4 || gameState.paused) return;
 
     const time = Date.now();
-    if (gameRunning && !gamePaused && !gameOver && time - lastEnemyShotTime > enemyBulletFrequency) {
+    if (gameRunning && !gameState.paused && !gameOver && time - lastEnemyShotTime > enemyBulletFrequency) {
         enemyShoot();
         lastEnemyShotTime = time;
     }
@@ -159,10 +159,23 @@ export function stopEnemyShooting() {
     }
 }
 
+function pauseGameForStory() {
+    gameState.paused = true;
+    if (!window.storyPauseStartTime) {
+        window.storyPauseStartTime = Date.now();
+    }
+}
+
+function resumeGameAfterStory() {
+    gameState.paused = false;
+    window.storyPauseStartTime = null;
+    startGame();
+}
 
 export const levelSettings = {
     winTheGame: 0
 }
+
 let levelsWinMessageTime = 500;
 export function enemyDestroyed(bBCR) {
     const enemies = document.querySelectorAll('.enemy');
@@ -174,10 +187,11 @@ export function enemyDestroyed(bBCR) {
             hit = true;
             addScore(enemy.id);
             if (document.querySelectorAll('.enemy').length === 0) {
-
-                 document.querySelectorAll('.enemyFire').forEach(bullet => {
+                document.querySelectorAll('.enemyFire').forEach(bullet => {
                     bullet.remove();
                 });
+                pauseGameForStory();
+
                 levelSettings.winTheGame++;
                 const box = document.createElement("div");
                 box.classList.add("storyBox");
@@ -248,6 +262,7 @@ export function enemyDestroyed(bBCR) {
                         box.remove();
                         gameSettings.makeEnemiesShootFaster += 1;
                         createEnemies(32);
+                        resumeGameAfterStory();
                     }
                 }, levelsWinMessageTime);
             }

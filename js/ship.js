@@ -1,4 +1,4 @@
-import { boxBCR, gameDiv, gameOver, gamePaused, keys } from "./index.js";
+import { boxBCR, gameDiv, gameOver, gameState, keys } from "./index.js";
 import { gameRunning, gameLost } from "./index.js";
 import { enemyDestroyed, scoreMultiplier, windowFocused } from "./enemy.js";
 
@@ -45,9 +45,9 @@ export function moveBullet() {
         bulletExists = false;
         return;
     }
-    if (gameRunning && !gamePaused) {
+    if (gameRunning && !gameState.paused) {
         const bulletBCR = bullet.getBoundingClientRect();
-        if (bulletBCR.top < boxBCR.top || enemyDestroyed(bulletBCR) /*|| mothershipDestroyed(bulletBCR)*/) {
+        if (bulletBCR.top < boxBCR.top || enemyDestroyed(bulletBCR)) {
             bullet.remove();
             bulletExists = false;
             return;
@@ -110,7 +110,7 @@ const timeDiv = document.querySelector(".time");
 export let sec;
 let min;
 export function addTime() {
-    if (gameRunning && !gamePaused && windowFocused) {
+    if (gameRunning && !gameState.paused && windowFocused) {
         sec++;
         if (sec % 60 === 0) {
             sec = 0;

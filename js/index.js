@@ -7,7 +7,9 @@ const titleDiv = document.querySelector(".title");
 const gameOverScreen = document.getElementById("gameOverScreen");
 export let gameRunning = false;
 export let gameOver = false;
-export let gamePaused = false;
+export const gameState = {
+  paused: false
+};
 let gamePausedByChecker = false;
 const isSmallScreen = document.querySelector(".isSmallScreen")
 const tryAgainBtn = document.getElementById("tryAgain")
@@ -68,12 +70,12 @@ function restoreBulletPositions() {
 }
 
 function checkScreen() {
-  if (tooSmallScreen() && gameRunning && !gamePaused && !gameOver) {
+  if (tooSmallScreen() && gameRunning && !gameState.paused && !gameOver) {
     gamePausedByChecker = true;
-    gamePaused = true;
+    gameState.paused = true;
     isSmallScreen.show();
-  } else if (!tooSmallScreen() && gameRunning && gamePaused && gamePausedByChecker) {
-    gamePaused = false;
+  } else if (!tooSmallScreen() && gameRunning && gameState.paused && gamePausedByChecker) {
+    gameState.paused = false;
     isSmallScreen.close();
     startGame();
     moveBullet();
@@ -89,14 +91,14 @@ function tooSmallScreen() {
 resumeBtn.addEventListener("click", () => {
   restoreBulletPositions(); // Restore positions when resuming
   pauseScreen.close();
-  gamePaused = false;
+  gameState.paused = false;
   startGame();
   moveBullet();
 });
 
 restartBtn.addEventListener("click", () => {
   pauseScreen.close();
-  gamePaused = false;
+  gameState.paused = false;
   resetGame();
   startGame();
   moveBullet();
@@ -147,7 +149,7 @@ document.addEventListener("keydown", (e) => {
     if (!keys.includes('r')) keys.unshift("r")
   }
   if ((e.code === "Space" || e.key === " ") && !gameKeys["Space"]) {
-    if (gameRunning && !gamePaused && !bulletExists) {
+    if (gameRunning && !gameState.paused && !bulletExists) {
       gameKeys["Space"] = true;
     }
 
@@ -155,7 +157,7 @@ document.addEventListener("keydown", (e) => {
       storyScreen.style.display = 'none';
     }
 
-    if (!gameRunning && !gamePaused && !gameOver) {
+    if (!gameRunning && !gameState.paused && !gameOver) {
       titleDiv.remove();
       gameDiv.removeAttribute("hidden");
       gameRunning = true;
@@ -170,14 +172,14 @@ document.addEventListener("keydown", (e) => {
     }
   }
   if (e.code === "Escape") {
-    if (gameRunning && !gamePaused) {
+    if (gameRunning && !gameState.paused) {
       storeBulletPositions();
       pauseScreen.show();
-      gamePaused = true;
-    } else if (gamePaused) {
+      gameState.paused = true;
+    } else if (gameState.paused) {
       restoreBulletPositions();
       pauseScreen.close();
-      gamePaused = false;
+      gameState.paused = false;
       startGame();
       moveBullet();
     }
@@ -200,8 +202,8 @@ document.addEventListener("keyup", (e) => {
   }
 });
 
-function startGame() {
-  if (!gamePaused && !gameOver) {
+export function startGame() {
+  if (!gameState.paused && !gameOver) {
     moveShip();
     moveEnemies();
     if (gameKeys["Space"] && !bulletExists) {
@@ -222,7 +224,7 @@ export function gameLost() {
 function resetGame() {
   gameRunning = true;
   gameOver = false;
-  gamePaused = false;
+  gameState.paused = false;
   gameSettings.makeEnemiesShootFaster = 5;
   levelSettings.winTheGame = 0;
   createShip();
