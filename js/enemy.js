@@ -193,24 +193,7 @@ export function enemyDestroyed(bBCR) {
 
                 // Create the main box div
                 const box = document.createElement("div");
-                box.classList.add("box");
-
-                // Apply styles
-                box.style.zIndex = "0";
-                box.style.backgroundColor = "black";
-                box.style.width = "900px";
-                box.style.height = "600px";
-                box.style.border = "1px solid white";
-                box.style.position = "absolute";
-                box.style.left = "50%";
-                box.style.top = "50%";
-                box.style.transform = "translate(-50%, -50%)";
-                box.style.display = "flex";
-                box.style.flexDirection = "column";
-                box.style.justifyContent = "center";
-                box.style.alignItems = "center";
-                box.style.padding = "20px";
-                box.style.textAlign = "center";
+                box.classList.add("storyBox");
 
                 // Create the content container
                 const content = document.createElement("div");

@@ -159,33 +159,10 @@ window.addEventListener("load", () => {
 
 const storyScreen = document.createElement('div');
 storyScreen.className = 'story-screen';
-storyScreen.style.cssText = `
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  font-family: 'Courier New', monospace;
-  color: #00ff00;
-  text-align: center;
-`;
+
 
 const storyContent = document.createElement('div');
 storyContent.className = 'story-content';
-storyContent.style.cssText = `
-  max-width: 80%;
-  padding: 30px;
-  border: 2px solid #00ff00;
-  border-radius: 10px;
-  background-color: rgba(0, 20, 0, 0.7);
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-  animation: pulse 2s infinite alternate;
-`;
 
 storyContent.innerHTML = `
   <h2 style="color: #ff5555; font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);">EARTH'S LAST DEFENSE</h2>

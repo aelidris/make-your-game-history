@@ -23,6 +23,24 @@ body {
     align-content: center;
 }
 
+.storyBox {
+    z-index: 0;
+    background-color: black;
+    width: 900px;
+    height: 600px;
+    border: 1px solid white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
 .game-title {
     font: 50px f;
     position: absolute;
@@ -42,8 +60,6 @@ body {
 .instructions p {
     text-align: center;
 }
-
-
 
 .start-game {
     font: 15px f;
@@ -66,7 +82,6 @@ img {
 .lives img {
     width: 30px;
 }
-
 
 .enemies {
     will-change: transform;
@@ -187,8 +202,8 @@ dialog button:hover {
 
 .level-message {
     font-family: 'Courier New', monospace;
-    color: #00ff00; /* Classic green terminal color */
-    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; /* Glow effect */
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
     line-height: 1.5;
     max-width: 80%;
     margin: 0 auto;
@@ -200,7 +215,7 @@ dialog button:hover {
 }
 
 .level-message h2 {
-    color: #ff5555; /* Red for headings */
+    color: #ff5555;
     text-shadow: 0 0 5px #ff0000;
     margin-bottom: 20px;
     font-size: 28px;
@@ -212,6 +227,32 @@ dialog button:hover {
 }
 
 .level-message .highlight {
-    color: #ffff00; /* Yellow for important text */
+    color: #ffff00;
     font-weight: bold;
+}
+
+.story-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    font-family: 'Courier New', monospace;
+    color: #00ff00;
+    text-align: center;
+}
+
+.story-content {
+    max-width: 80%;
+    padding: 30px;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    background-color: rgba(0, 20, 0, 0.7);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    animation: pulse 2s infinite alternate;
 }
