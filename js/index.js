@@ -98,6 +98,9 @@ resumeBtn.addEventListener("click", () => {
 restartBtn.addEventListener("click", () => {
   pauseScreen.close();
   gameState.paused = false;
+  document.querySelectorAll('.enemyFire').forEach(bullet => {
+    bullet.remove();
+  });
   resetGame();
   startGame();
   moveBullet();
