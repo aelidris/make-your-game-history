@@ -127,7 +127,7 @@ function moveEnemyBullet(bullet) {
 
         bullet.style.top = `${newTop}px`;
 
-        if (newTop < boxBCR.bottom && !isBulletHitPlayer(bullet.getBoundingClientRect())) {
+        if (newTop < boxBCR.bottom-20 && !isBulletHitPlayer(bullet.getBoundingClientRect())) {
             activeBulletAnimations.set(bullet, requestAnimationFrame(move));
         } else {
             bullet.remove();
