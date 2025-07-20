@@ -1,7 +1,7 @@
 import { boxBCR, gameLost, gameState, gameOver, gameRunning, startGame } from "./index.js";
 import { isBulletHitPlayer, addScore } from "./ship.js";
 
-let enemyBulletFrequency = 500;
+let enemyBulletFrequency = 1000;
 export let scoreMultiplier = 1;
 
 const enemyDiv = document.querySelector(".enemies");
