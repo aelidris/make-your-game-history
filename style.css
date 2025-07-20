@@ -41,26 +41,6 @@ body {
     text-align: center;
 }
 
-.game-title {
-    font: 50px f;
-    position: absolute;
-    left: 30%;
-    top: 10%;
-    transform: translate(-20%);
-}
-
-.instructions {
-    font: 17px f;
-    position: absolute;
-    top: 30%;
-    left: 42%;
-    transform: translate(-40%);
-}
-
-.instructions p {
-    text-align: center;
-}
-
 .start-game {
     font: 15px f;
     position: absolute;

@@ -3,7 +3,6 @@ import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies, gameSetti
 
 export const gameDiv = document.querySelector(".game");
 export let boxBCR = document.querySelector(".box").getBoundingClientRect();
-const titleDiv = document.querySelector(".title");
 const gameOverScreen = document.getElementById("gameOverScreen");
 export let gameRunning = false;
 export let gameOver = false;
@@ -158,7 +157,6 @@ document.addEventListener("keydown", (e) => {
     }
 
     if (!gameRunning && !gameState.paused && !gameOver) {
-      titleDiv.remove();
       gameDiv.removeAttribute("hidden");
       gameRunning = true;
       checkScreen();
