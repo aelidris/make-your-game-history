@@ -46,28 +46,6 @@ window.addEventListener('resize', () => {
   checkScreen();
 });
 
-function storeBulletPositions() {
-  pausedBullets = [];
-  document.querySelectorAll('.enemyFire').forEach(bullet => {
-    const rect = bullet.getBoundingClientRect();
-    pausedBullets.push({
-      element: bullet,
-      top: rect.top,
-      left: rect.left
-    });
-  });
-}
-
-function restoreBulletPositions() {
-  pausedBullets.forEach(bulletData => {
-    if (bulletData.element.isConnected) {
-      bulletData.element.style.top = `${bulletData.top}px`;
-      bulletData.element.style.left = `${bulletData.left}px`;
-    }
-  });
-  pausedBullets = [];
-}
-
 function checkScreen() {
   if (tooSmallScreen() && gameRunning && !gameState.paused && !gameOver) {
     gamePausedByChecker = true;
@@ -88,7 +66,6 @@ function tooSmallScreen() {
 }
 
 resumeBtn.addEventListener("click", () => {
-  restoreBulletPositions(); // Restore positions when resuming
   pauseScreen.close();
   gameState.paused = false;
   startGame();
@@ -177,11 +154,9 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.code === "Escape") {
     if (gameRunning && !gameState.paused) {
-      storeBulletPositions();
       pauseScreen.show();
       gameState.paused = true;
     } else if (gameState.paused) {
-      restoreBulletPositions();
       pauseScreen.close();
       gameState.paused = false;
       startGame();

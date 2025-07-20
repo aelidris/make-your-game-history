@@ -99,8 +99,8 @@ export const gameSettings = {
 };
 
 function moveEnemyBullet(bullet) {
-    let lastTime = performance.now();
-    let accumulatedPauseTime = 0;
+    let lastTime = performance.now(); // More accurate than Date.now()
+    let accumulatedPauseTime = 0; // Tracks total time game was paused during this bullet's flight
     let pauseStartTime = 0;
 
     function move(currentTime) {
