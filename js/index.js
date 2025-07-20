@@ -21,8 +21,6 @@ export const gameKeys = {
   Space: false,
 };
 
-let pausedBullets = [];
-
 export const keys = [];
 
 // game lost story

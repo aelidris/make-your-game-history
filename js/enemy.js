@@ -89,7 +89,7 @@ function enemyShoot() {
     if (enemies.length > 0) {
         const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
         const enemyBCR = randomEnemy.getBoundingClientRect();
-        const bullet = createEnemyBullet(enemyBCR.left + enemyBCR.width / 2 - 2, enemyBCR.top + enemyBCR.height); // Adjust -2 for centering
+        const bullet = createEnemyBullet(enemyBCR.left + enemyBCR.width / 2 - 2, enemyBCR.top + enemyBCR.height);
         moveEnemyBullet(bullet);
     }
 }
@@ -99,8 +99,8 @@ export const gameSettings = {
 };
 
 function moveEnemyBullet(bullet) {
-    let lastTime = performance.now(); // More accurate than Date.now()
-    let accumulatedPauseTime = 0; // Tracks total time game was paused during this bullet's flight
+    let lastTime = performance.now();
+    let accumulatedPauseTime = 0;
     let pauseStartTime = 0;
 
     function move(currentTime) {
