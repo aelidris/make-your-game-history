@@ -101,6 +101,9 @@ restartBtn.addEventListener("click", () => {
   document.querySelectorAll('.enemyFire').forEach(bullet => {
     bullet.remove();
   });
+  document.querySelectorAll('.bullet').forEach(bullet => {
+    bullet.remove();
+  });
   resetGame();
   startGame();
   moveBullet();
