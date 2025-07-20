@@ -137,6 +137,15 @@ document.addEventListener("keydown", (e) => {
       storyScreen.style.display = 'none';
     }
 
+    if (gameOver) {
+      document.querySelectorAll('.enemyFire').forEach(bullet => {
+        bullet.remove();
+      });
+      document.querySelectorAll('.bullet').forEach(bullet => {
+        bullet.remove();
+      });
+    }
+
     if (!gameRunning && !gameState.paused && !gameOver) {
       gameDiv.removeAttribute("hidden");
       gameRunning = true;
@@ -145,6 +154,12 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.code === 'Enter') {
     if (gameOver) {
+      document.querySelectorAll('.enemyFire').forEach(bullet => {
+        bullet.remove();
+      });
+      document.querySelectorAll('.bullet').forEach(bullet => {
+        bullet.remove();
+      });
       gameOverStory.style.display = 'none';
       gameRunning = true;
       gameOver = false;
