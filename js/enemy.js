@@ -1,5 +1,5 @@
 import { boxBCR, gameLost, gameState, gameOver, gameRunning, startGame } from "./index.js";
-import { isBulletHitPlayer, addScore } from "./ship.js";
+import { isBulletHitPlayer, addScore, cleanupBullets } from "./ship.js";
 
 let enemyBulletFrequency = 1000;
 export let scoreMultiplier = 1;
@@ -187,6 +187,7 @@ export function enemyDestroyed(bBCR) {
             hit = true;
             addScore(enemy.id);
             if (document.querySelectorAll('.enemy').length === 0) {
+                cleanupBullets();
                 document.querySelectorAll('.enemyFire').forEach(bullet => {
                     bullet.remove();
                 });

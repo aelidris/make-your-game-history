@@ -1,4 +1,4 @@
-import { createShip, moveShip, fireBullet, moveBullet, bulletExists, addLives, addTime, initTimeAndScore } from "./ship.js";
+import { createShip, moveShip, fireBullet,  moveBullet, addLives, addTime, initTimeAndScore } from "./ship.js";
 import { moveEnemies, createEnemies, startEnemyShooting, clearEnemies, gameSettings, levelSettings } from "./enemy.js";
 
 export const gameDiv = document.querySelector(".game");
@@ -67,11 +67,11 @@ resumeBtn.addEventListener("click", () => {
   pauseScreen.close();
   gameState.paused = false;
   startGame();
-  moveBullet();
+  // moveBullet();
 });
 
 restartBtn.addEventListener("click", () => {
-  pauseScreen.close();
+  // pauseScreen.close();
   gameState.paused = false;
   document.querySelectorAll('.enemyFire').forEach(bullet => {
     bullet.remove();
@@ -81,7 +81,7 @@ restartBtn.addEventListener("click", () => {
   });
   resetGame();
   startGame();
-  moveBullet();
+  // moveBullet();
 });
 
 tryAgainBtn.addEventListener('click', () => {
@@ -91,7 +91,7 @@ tryAgainBtn.addEventListener('click', () => {
   gameOver = false;
   resetGame();
   startGame();
-  moveBullet();
+  // moveBullet();
 })
 
 window.addEventListener("load", () => {
@@ -99,10 +99,10 @@ window.addEventListener("load", () => {
   createEnemies(32);
   addLives();
   startEnemyShooting();
-  const startGameBtn = document.querySelector(".start-game");
-  setInterval(() => {
-    startGameBtn.classList.toggle("hidden");
-  }, 700);
+  // const startGameBtn = document.querySelector(".start-game");
+  // setInterval(() => {
+  //   startGameBtn.classList.toggle("hidden");
+  // }, 700);
 });
 
 // start story
@@ -129,7 +129,7 @@ document.addEventListener("keydown", (e) => {
     if (!keys.includes('r')) keys.unshift("r")
   }
   if ((e.code === "Space" || e.key === " ") && !gameKeys["Space"]) {
-    if (gameRunning && !gameState.paused && !bulletExists) {
+    if (gameRunning && !gameState.paused ) {
       gameKeys["Space"] = true;
     }
 
@@ -173,18 +173,18 @@ document.addEventListener("keydown", (e) => {
       pauseScreen.close();
       gameState.paused = false;
       startGame();
-      moveBullet();
+      // moveBullet();
     }
   }
 });
 
-[resumeBtn, restartBtn, tryAgainBtn].forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (storyScreen.style.display !== 'none') {
-      storyScreen.style.display = 'none';
-    }
-  });
-});
+// [resumeBtn, restartBtn, tryAgainBtn].forEach(btn => {
+//   btn.addEventListener('click', () => {
+//     if (storyScreen.style.display !== 'none') {
+//       storyScreen.style.display = 'none';
+//     }
+//   });
+// });
 
 document.addEventListener("keyup", (e) => {
   if (e.code === "ArrowLeft") keys.splice(keys.indexOf("l"), 1)
@@ -198,7 +198,7 @@ export function startGame() {
   if (!gameState.paused && !gameOver) {
     moveShip();
     moveEnemies();
-    if (gameKeys["Space"] && !bulletExists) {
+    if (gameKeys["Space"] ) {
       fireBullet()
     }
     startEnemyShooting();

@@ -5,9 +5,15 @@ import { enemyDestroyed, scoreMultiplier, windowFocused } from "./enemy.js";
 export const scoreDiv = document.querySelector(".score")
 const ship = document.createElement("img");
 export let shipX, shipY;
-export let bulletExists = false;
+
+// Changed: Remove single bullet tracking, use array for multiple bullets
+export let bullets = [];
+let lastShotTime = 0;
+const SHOT_COOLDOWN = 100; // 100ms cooldown
+
 let score;
 let lives;
+
 export function createShip() {
     shipX = boxBCR.width / 2 - 25;
     shipY = boxBCR.height - 75;
@@ -17,6 +23,7 @@ export function createShip() {
     ship.style.transform = `translate(${shipX}px,${shipY}px)`;
     gameDiv.appendChild(ship);
 }
+
 export function moveShip() {
     if (gameRunning) {
         if (keys[0]) {
@@ -24,39 +31,89 @@ export function moveShip() {
             else if (shipX >= 2) shipX -= 5;
         }
     }
-
     ship.style.transform = `translate(${shipX}px,${shipY}px)`;
 }
-const bullet = document.createElement('div');
-bullet.setAttribute('class', 'bullet');
-let bulletX, bulletY;
+
+// Modified: Allow shooting every 100ms
 export function fireBullet() {
-    bulletExists = true;
-    bulletX = shipX + 24;
-    bulletY = shipY;
-    bullet.style.transform = `translate(${bulletX}px, ${bulletY}px)`
+    const currentTime = Date.now();
+    
+    // Check if enough time has passed since last shot
+    if (currentTime - lastShotTime < SHOT_COOLDOWN) {
+        return; // Can't shoot yet
+    }
+    
+    lastShotTime = currentTime;
+    
+    // Create new bullet
+    const bullet = document.createElement('div');
+    bullet.setAttribute('class', 'bullet');
+    
+    const bulletData = {
+        element: bullet,
+        x: shipX + 24,
+        y: shipY
+    };
+    
+    bullet.style.transform = `translate(${bulletData.x}px, ${bulletData.y}px)`;
     gameDiv.appendChild(bullet);
-    moveBullet();
+    
+    bullets.push(bulletData);
+    moveBullet(bulletData);
 }
 
-export function moveBullet() {
+// Modified: Handle individual bullet movement
+export function moveBullet(bulletData) {
     if (gameOver) {
-        bullet.remove();
-        bulletExists = false;
+        bulletData.element.remove();
+        removeBulletFromArray(bulletData);
         return;
     }
-    if (gameRunning && !gameState.paused) {
-        const bulletBCR = bullet.getBoundingClientRect();
+    
+    if (gameRunning) {
+        const bulletBCR = bulletData.element.getBoundingClientRect();
+        
+        // Check if bullet hit top or enemy
         if (bulletBCR.top < boxBCR.top || enemyDestroyed(bulletBCR)) {
-            bullet.remove();
-            bulletExists = false;
+            bulletData.element.remove();
+            removeBulletFromArray(bulletData);
             return;
         }
-        bulletY -= 5;
-        bullet.style.transform = `translate(${bulletX}px, ${bulletY}px)`
-        requestAnimationFrame(moveBullet)
+        
+        // Move bullet up
+        bulletData.y -= 5;
+        bulletData.element.style.transform = `translate(${bulletData.x}px, ${bulletData.y}px)`;
+        
+        // Continue moving this bullet
+        requestAnimationFrame(() => moveBullet(bulletData));
     }
+}
 
+// Helper function to remove bullet from array
+function removeBulletFromArray(bulletData) {
+    const index = bullets.indexOf(bulletData);
+    if (index > -1) {
+        bullets.splice(index, 1);
+    }
+}
+
+// Modified: Check collision for all bullets
+export function checkBulletCollisions() {
+    bullets.forEach(bulletData => {
+        const bulletBCR = bulletData.element.getBoundingClientRect();
+        if (enemyDestroyed(bulletBCR)) {
+            bulletData.element.remove();
+            removeBulletFromArray(bulletData);
+        }
+    });
+}
+
+// Clean up all bullets when game ends
+export function cleanupBullets() {
+    bullets.forEach(bulletData => {
+        bulletData.element.remove();
+    });
+    bullets = [];
 }
 
 export function addLives() {
@@ -71,11 +128,11 @@ export function addLives() {
         divLive.setAttribute("id", `life-${i}`);
         left += 30
         divLive.onload = () => {
-
             liveSpan.appendChild(divLive);
         }
     }
 }
+
 export function isBulletHitPlayer(bulletBCR) {
     const playerBCR = document.querySelector(".ship").getBoundingClientRect();
     if (bulletBCR.right > playerBCR.left && bulletBCR.left < playerBCR.right &&
